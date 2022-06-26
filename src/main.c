@@ -13,12 +13,12 @@
 #include "window/map.c"
 
 int main() {
-  pthread_t input_thread_id;
-  pthread_create(&input_thread_id, NULL, input_thread, NULL);
   if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
     log_("Failed to initialise SDL: %s", SDL_GetError());
     exit(-1);
   }
+  pthread_t input_thread_id;
+  pthread_create(&input_thread_id, NULL, input_thread, NULL);
   WINDOW_PTR = SDL_CreateWindow("Test", SDL_WINDOWPOS_CENTERED,
                                 SDL_WINDOWPOS_CENTERED, INITIAL_WINDOW_WIDTH,
                                 INITIAL_WINDOW_HEIGHT, SDL_WINDOW_RESIZABLE);
