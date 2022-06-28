@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include <pthread.h>
+#include <stdlib.h>
 
 #include "global_vars.c"
 #include "gui/brush.c"
@@ -8,7 +9,9 @@
 #include "gui/paint.c"
 #include "input/input.c"
 #include "logger.c"
+#include "math.h"
 #include "math/math.h"
+#include "math/matrix.c"
 #include "math/vector.c"
 #include "window/map.c"
 
