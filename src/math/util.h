@@ -1,5 +1,7 @@
 #pragma once
 
+#include <math.h>
+
 #include "util.c"
 
 float map_to_range(float num_to_map, float range_input_min,
