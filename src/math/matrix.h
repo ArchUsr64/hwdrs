@@ -27,4 +27,6 @@ void set_matrix_element(Matrix *matrix, Scalar value, int row_index,
                         int col_index);
 Scalar get_matrix_element(Matrix *matrix, int row_index, int col_index);
 void print_matrix(Matrix *matrix);
+Matrix matrix_duplicate(Matrix *matrix);
+void matrix_copy(Matrix *matrix_src, Matrix *matrix_dest);
 bool matrix_equivalent(Matrix *matrix_1, Matrix *matrix_2);

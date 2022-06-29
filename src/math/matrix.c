@@ -103,6 +103,24 @@ void print_matrix(Matrix *matrix) {
   print_dashes((value_percision + 3) * matrix->size.col + 2);
 };
 
+Matrix matrix_duplicate(Matrix *matrix) {
+  Matrix return_matrix = new_matrix(matrix->size.row, matrix->size.col);
+  for (int i = 0; i < matrix->size.row; i++)
+    for (int j = 0; j < matrix->size.col; j++)
+      set_matrix_element(&return_matrix, get_matrix_element(matrix, i, j), i,
+                         j);
+	return return_matrix;
+}
+
+void matrix_copy(Matrix *matrix_src, Matrix *matrix_dest) {
+  if (matrix_equivalent(matrix_src, matrix_dest)) {
+    for (int i = 0; i < matrix_dest->size.row; i++)
+      for (int j = 0; j < matrix_dest->size.col; j++)
+        set_matrix_element(matrix_dest, get_matrix_element(matrix_src, i, j), i,
+                           j);
+  }
+}
+
 bool matrix_equivalent(Matrix *matrix_1, Matrix *matrix_2) {
   if (matrix_1->size.row == matrix_2->size.row &&
       matrix_1->size.col == matrix_2->size.col) {

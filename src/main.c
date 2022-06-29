@@ -16,6 +16,7 @@
 #include "window/map.c"
 
 int main() {
+	exit(EXIT_FAILURE);
   if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
     log_("Failed to initialise SDL: %s", SDL_GetError());
     exit(-1);
