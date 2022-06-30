@@ -10,3 +10,5 @@ typedef struct _NeuralNetwork {
 } NeuralNetwork;
 
 void neural_network_forward_propogation(NeuralNetwork *network);
+void neural_network_fill_random(NeuralNetwork *network, float range_min,
+                                float range_max);

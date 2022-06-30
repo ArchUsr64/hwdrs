@@ -25,3 +25,9 @@ u_int32_t u8tou32(u_int8_t *element) {
   }
   return return_int;
 };
+
+float random_in_range(float range_min, float range_max) {
+  const int increments = 2000;
+  int number = rand() % increments;
+  return map_to_range(number, 0, increments, range_min, range_max);
+};

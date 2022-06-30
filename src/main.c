@@ -40,6 +40,7 @@ int main() {
                            .hidden_neuron_count = sizeof(network_hidden_array) /
                                                   sizeof(HiddenNeuronLayer),
                            .output_neuron_layer = network_output};
+  neural_network_fill_random(&network, -1, 1);
 
   if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
     log_("Failed to initialise SDL: %s", SDL_GetError());
@@ -65,12 +66,32 @@ int main() {
   Grid grid = new_grid(cells);
   int index = rand() % 60000;
   KeyState state_prev;
+  for (int i = 0; i < 28; i++) {
+    for (int j = 0; j < 28; j++) {
+      set_cell_value(&grid, get_image_data(&dataset_image, index, i, j) / 255.5,
+                     j, i);
+    }
+  }
 
   while (!user_quit) {
     if (mouse.middle_button != state_prev) {
       if (mouse.middle_button == KEYDOWN) {
+        index++;
+        for (int i = 0; i < 28; i++) {
+          for (int j = 0; j < 28; j++) {
+            set_cell_value(&grid,
+                           get_image_data(&dataset_image, index, i, j) / 255.0,
+                           j, i);
+          }
+        }
         Matrix t = grid_cells_to_matrix(&grid);
-        print_matrix(&t);
+				log_("t");
+        network.input_neuron_layer.node_value_matrix = row_matrix_from(&t);
+				log_("t");
+        neural_network_forward_propogation(&network);
+				log_("t");
+        print_matrix(&network.output_neuron_layer.node_value_matrix);
+				SDL_Delay(100);
       }
     }
     SDL_SetRenderDrawColor(RENDERER_PTR, 0, 0, 0, 255);
@@ -79,13 +100,6 @@ int main() {
     paint_grid(&grid);
     render_grid(&grid);
     render_brush();
-    for (int i = 0; i < 28; i++) {
-      for (int j = 0; j < 28; j++) {
-        set_cell_value(
-            &grid, get_image_data(&dataset_image, index, i, j) / 255.5, j, i);
-      }
-    }
-    log_("Currently drawing: %d", get_label_data(&dataset_label, index));
     state_prev = mouse.middle_button;
     SDL_RenderPresent(RENDERER_PTR);
   }

@@ -109,7 +109,18 @@ Matrix matrix_duplicate(Matrix *matrix) {
     for (int j = 0; j < matrix->size.col; j++)
       set_matrix_element(&return_matrix, get_matrix_element(matrix, i, j), i,
                          j);
-	return return_matrix;
+  return return_matrix;
+}
+
+Matrix matrix_fill_random(Matrix *matrix, float range_min, float range_max) {
+  Matrix return_matrix = new_matrix(matrix->size.row, matrix->size.col);
+  for (int i = 0; i < return_matrix.size.row; i++) {
+    for (int j = 0; j < return_matrix.size.col; j++) {
+      set_matrix_element(&return_matrix, random_in_range(range_min, range_max),
+                         i, j);
+    }
+  }
+  return return_matrix;
 }
 
 void matrix_copy(Matrix *matrix_src, Matrix *matrix_dest) {
@@ -127,4 +138,15 @@ bool matrix_equivalent(Matrix *matrix_1, Matrix *matrix_2) {
     return true;
   }
   return false;
+};
+
+Matrix row_matrix_from(Matrix *matrix) {
+  Matrix return_matrix = new_matrix(1, matrix->size.row * matrix->size.col);
+  for (int i = 0; i < matrix->size.row; i++) {
+    for (int j = 0; j < matrix->size.col; j++) {
+      Scalar value = get_matrix_element(matrix, i, j);
+      set_matrix_element(&return_matrix, value, 1, i * matrix->size.col + j);
+    }
+  }
+  return return_matrix;
 };

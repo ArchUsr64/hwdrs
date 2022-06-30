@@ -16,6 +16,14 @@ typedef struct _HiddenNeuronLayer {
 
 typedef HiddenNeuronLayer OutputNeuronLayer;
 
+InputNeuronLayer new_input_layer(int node_count);
+HiddenNeuronLayer new_hidden_layer(int input_node_count, int node_count);
+HiddenNeuronLayer hidden_neuron_layer_fill_random(HiddenNeuronLayer *layer,
+                                                 float range_min,
+                                                 float range_max);
 OutputNeuronLayer new_output_layer(int input_node_count, int node_count);
+OutputNeuronLayer output_neuron_layer_fill_random(OutputNeuronLayer *layer,
+                                                  float range_min,
+                                                  float range_max);
 
 void layer_feed_input(HiddenNeuronLayer *layer, Matrix *input_matrix);

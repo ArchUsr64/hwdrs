@@ -21,3 +21,13 @@ void neural_network_forward_propogation(NeuralNetwork *network) {
                      &network->input_neuron_layer.node_value_matrix);
   }
 };
+
+void neural_network_fill_random(NeuralNetwork *network, float range_min,
+                                float range_max) {
+  for (int i = 0; i < network->hidden_neuron_count; i++) {
+    network->hidden_neuron_layer_array[i] = hidden_neuron_layer_fill_random(
+        &network->hidden_neuron_layer_array[i], range_min, range_max);
+  }
+  network->output_neuron_layer = hidden_neuron_layer_fill_random(
+      &network->output_neuron_layer, range_min, range_max);
+};

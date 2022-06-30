@@ -15,6 +15,6 @@ float map_to_range(float num_to_map, float range_input_min,
 
 float sigmoid(float value);
 
-/* float random(float range_min, float range_max); */
+float random_in_range(float range_min, float range_max);
 
 u_int32_t u8tou32(u_int8_t *element);
