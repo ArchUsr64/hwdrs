@@ -54,3 +54,13 @@ float get_cell_value(Grid *grid, int index_x, int index_y) {
 void set_cell_value(Grid *grid, float value, int index_x, int index_y) {
   *(grid->cell + (index_x * GRID_SIZE) + index_y) = value;
 }
+
+Matrix grid_cells_to_matrix(Grid *grid) {
+  Matrix return_matrix = new_matrix(GRID_SIZE, GRID_SIZE);
+  for (int i = 0; i < return_matrix.size.row; i++) {
+    for (int j = 0; j < return_matrix.size.col; j++) {
+      set_matrix_element(&return_matrix, get_cell_value(grid, j, i), i, j);
+    }
+  }
+  return return_matrix;
+}

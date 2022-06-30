@@ -29,6 +29,8 @@ void *input_thread(void *var) {
         ((mouse_buttons & SDL_BUTTON_LMASK) != 0) ? KEYDOWN : KEYUP;
     mouse.right_button =
         ((mouse_buttons & SDL_BUTTON_RMASK) != 0) ? KEYDOWN : KEYUP;
+    mouse.middle_button =
+        ((mouse_buttons & SDL_BUTTON_MMASK) != 0) ? KEYDOWN : KEYUP;
     while (SDL_PollEvent(&event)) {
       switch (event.key.type) {
       case SDL_QUIT:

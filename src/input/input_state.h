@@ -13,6 +13,7 @@ typedef struct _MouseState {
 	Pixel position_px;
   KeyState left_button;
   KeyState right_button;
+	KeyState middle_button;
 	void (*mouse_up_function)(void);
 	void (*mouse_down_function)(void);
 } MouseState;
