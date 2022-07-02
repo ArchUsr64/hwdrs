@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../print.c"
 #include "neuron_layer.h"
 
 typedef struct _NeuralNetwork {
@@ -12,3 +13,4 @@ typedef struct _NeuralNetwork {
 void neural_network_forward_propogation(NeuralNetwork *network);
 void neural_network_fill_random(NeuralNetwork *network, float range_min,
                                 float range_max);
+void neural_network_print_output(NeuralNetwork *network);

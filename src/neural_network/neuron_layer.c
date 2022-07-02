@@ -21,15 +21,10 @@ HiddenNeuronLayer new_hidden_layer(int input_node_count, int node_count) {
   return return_neuron_layer;
 };
 
-HiddenNeuronLayer hidden_neuron_layer_fill_random(HiddenNeuronLayer *layer,
-                                                  float range_min,
-                                                  float range_max) {
-  HiddenNeuronLayer return_layer;
-  return_layer.node_weight_matrix =
-      matrix_fill_random(&layer->node_weight_matrix, -1, 1);
-  return_layer.node_bias_matrix =
-      matrix_fill_random(&layer->node_bias_matrix, -1, 1);
-  return return_layer;
+void hidden_neuron_layer_fill_random(HiddenNeuronLayer *layer, float range_min,
+                                     float range_max) {
+  matrix_fill_random(&layer->node_weight_matrix, -1, 1);
+  matrix_fill_random(&layer->node_bias_matrix, -1, 1);
 };
 
 OutputNeuronLayer new_output_layer(int input_node_count, int node_count) {
@@ -38,17 +33,16 @@ OutputNeuronLayer new_output_layer(int input_node_count, int node_count) {
   return return_layer;
 };
 
-OutputNeuronLayer output_neuron_layer_fill_random(OutputNeuronLayer *layer,
-                                                  float range_min,
-                                                  float range_max) {
-  OutputNeuronLayer return_layer =
-      hidden_neuron_layer_fill_random(layer, range_min, range_max);
-  return return_layer;
+void output_neuron_layer_fill_random(OutputNeuronLayer *layer, float range_min,
+                                     float range_max) {
+  hidden_neuron_layer_fill_random(layer, range_min, range_max);
 };
 
 void layer_feed_input(HiddenNeuronLayer *layer, Matrix *input_matrix) {
+  free_matrix(&layer->node_value_matrix);
+  Matrix value_matrix;
+  value_matrix = matrix_product(input_matrix, &layer->node_weight_matrix);
   layer->node_value_matrix =
-      matrix_product(input_matrix, &layer->node_weight_matrix);
-  layer->node_value_matrix =
-      matrix_add(&layer->node_weight_matrix, &layer->node_bias_matrix);
+      matrix_add(&value_matrix, &layer->node_bias_matrix);
+  free_matrix(&value_matrix);
 }

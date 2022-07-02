@@ -24,6 +24,7 @@ int main() {
   DatasetLabel dataset_label = new_dataset_label("dataset/labels");
   DatasetImage dataset_image = new_dataset_image("dataset/images");
   GRID_SIZE = dataset_image.row_count;
+  GRID_SIZE = 28;
 
   InputNeuronLayer network_input =
       new_input_layer(dataset_image.row_count * dataset_image.col_count);
@@ -41,6 +42,17 @@ int main() {
                                                   sizeof(HiddenNeuronLayer),
                            .output_neuron_layer = network_output};
   neural_network_fill_random(&network, -1, 1);
+  /* for (int i = 0; i < dataset_image.row_count; i++) { */
+  /*   for (int j = 0; j < dataset_image.col_count; j++) { */
+  /*     float value = get_image_data(&dataset_image, 0, i, j) / 255.0; */
+  /*     set_matrix_element(&network.input_neuron_layer.node_value_matrix,
+   * value, */
+  /*                        0, i * 28 + j); */
+  /*   } */
+  /* } */
+  /* neural_network_forward_propogation(&network); */
+  /* print_matrix(&network.output_neuron_layer.node_value_matrix); */
+  /* exit(EXIT_SUCCESS); */
 
   if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
     log_("Failed to initialise SDL: %s", SDL_GetError());
@@ -66,34 +78,19 @@ int main() {
   Grid grid = new_grid(cells);
   int index = rand() % 60000;
   KeyState state_prev;
-  for (int i = 0; i < 28; i++) {
-    for (int j = 0; j < 28; j++) {
-      set_cell_value(&grid, get_image_data(&dataset_image, index, i, j) / 255.5,
-                     j, i);
-    }
-  }
 
   while (!user_quit) {
-    if (mouse.middle_button != state_prev) {
-      if (mouse.middle_button == KEYDOWN) {
-        index++;
-        for (int i = 0; i < 28; i++) {
-          for (int j = 0; j < 28; j++) {
-            set_cell_value(&grid,
-                           get_image_data(&dataset_image, index, i, j) / 255.0,
-                           j, i);
-          }
-        }
-        Matrix t = grid_cells_to_matrix(&grid);
-				log_("t");
-        network.input_neuron_layer.node_value_matrix = row_matrix_from(&t);
-				log_("t");
-        neural_network_forward_propogation(&network);
-				log_("t");
-        print_matrix(&network.output_neuron_layer.node_value_matrix);
-				SDL_Delay(100);
-      }
+    if (mouse.middle_button == KEYDOWN && state_prev == KEYUP) {
+      neural_network_fill_random(&network, -1, 1);
     }
+    Matrix fk = grid_cells_to_matrix(&grid);
+    /* Matrix fk = new_matrix(1, 28 * 28); */
+    fk = row_matrix_from(&fk);
+    network.input_neuron_layer.node_value_matrix = fk;
+    neural_network_forward_propogation(&network);
+    print_matrix(&network.output_neuron_layer.node_value_matrix);
+    free_matrix(&fk);
+    neural_network_print_output(&network);
     SDL_SetRenderDrawColor(RENDERER_PTR, 0, 0, 0, 255);
     SDL_RenderClear(RENDERER_PTR);
     SDL_SetRenderDrawColor(RENDERER_PTR, 255, 255, 255, 255);
