@@ -1,3 +1,4 @@
+#include <SDL2/SDL_timer.h>
 #include <pthread.h>
 #include <string.h>
 
@@ -21,13 +22,15 @@
 
 int main() {
 
-  DatasetLabel dataset_label = new_dataset_label("dataset/labels");
-  DatasetImage dataset_image = new_dataset_image("dataset/images");
-  GRID_SIZE = dataset_image.row_count;
+  DatasetLabel training_label = new_dataset_label("dataset/training/labels");
+  DatasetImage training_image = new_dataset_image("dataset/training/images");
+  DatasetLabel test_label = new_dataset_label("dataset/test/labels");
+  DatasetImage test_image = new_dataset_image("dataset/test/images");
+  GRID_SIZE = training_image.row_count;
   GRID_SIZE = 28;
 
   InputNeuronLayer network_input =
-      new_input_layer(dataset_image.row_count * dataset_image.col_count);
+      new_input_layer(training_image.row_count * training_image.col_count);
   HiddenNeuronLayer network_hidden_a =
       new_hidden_layer(network_input.node_count, 16);
   HiddenNeuronLayer network_hidden_b =
@@ -41,18 +44,19 @@ int main() {
                            .hidden_neuron_count = sizeof(network_hidden_array) /
                                                   sizeof(HiddenNeuronLayer),
                            .output_neuron_layer = network_output};
-  neural_network_fill_random(&network, -1, 1);
-  /* for (int i = 0; i < dataset_image.row_count; i++) { */
-  /*   for (int j = 0; j < dataset_image.col_count; j++) { */
-  /*     float value = get_image_data(&dataset_image, 0, i, j) / 255.0; */
-  /*     set_matrix_element(&network.input_neuron_layer.node_value_matrix,
-   * value, */
-  /*                        0, i * 28 + j); */
-  /*   } */
-  /* } */
-  /* neural_network_forward_propogation(&network); */
-  /* print_matrix(&network.output_neuron_layer.node_value_matrix); */
-  /* exit(EXIT_SUCCESS); */
+
+  log_("START: %d", SDL_GetTicks());
+  for (int i = 0; i < 10; i++) {
+    neural_network_fill_random(&network, -1, 1);
+    float fitness2 = neural_network_evaluate_fitness(&network, &training_image,
+                                                     &training_label);
+    float fitness1 =
+        neural_network_evaluate_fitness(&network, &test_image, &test_label);
+    log_("Fitness 60k vs 10k = %.3f vs %.3f", fitness2, fitness1);
+    log_("----------------");
+  }
+  log_("START: %d", SDL_GetTicks());
+  exit(0);
 
   if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
     log_("Failed to initialise SDL: %s", SDL_GetError());
@@ -80,11 +84,7 @@ int main() {
   KeyState state_prev;
 
   while (!user_quit) {
-    if (mouse.middle_button == KEYDOWN && state_prev == KEYUP) {
-      neural_network_fill_random(&network, -1, 1);
-    }
     Matrix fk = grid_cells_to_matrix(&grid);
-    /* Matrix fk = new_matrix(1, 28 * 28); */
     fk = row_matrix_from(&fk);
     network.input_neuron_layer.node_value_matrix = fk;
     neural_network_forward_propogation(&network);

@@ -37,3 +37,4 @@ Matrix row_matrix_from(Matrix *matrix);
 void matrix_sigmoid(Matrix *matrix);
 void free_matrix(Matrix *matrix);
 void matrix_normalise(Matrix *matrix);
+float matrix_element_sum(Matrix *matrix);

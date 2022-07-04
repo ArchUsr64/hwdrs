@@ -3,6 +3,8 @@
 #include <math.h>
 #include <stdlib.h>
 
+#define min(x, y) (((x) > (y)) ? (y) : (x))
+#define max(x, y) (((x) < (y)) ? (y) : (x))
 #define abs_(x) ((x) > 0) ? ((x)) : (-1 * (x))
 #define round_(x) (((x) - (int)(x)) > 0.5) ? ((int)((x) + 1)) : ((int)(x))
 #define reciprocal_(x) (1.0 / (x))

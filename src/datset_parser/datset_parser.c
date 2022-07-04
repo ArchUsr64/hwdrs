@@ -108,3 +108,15 @@ FILE *ffopen(const char *file_path) {
   }
   return file_ptr;
 }
+
+Matrix get_image_data_as_matrix(DatasetImage *image_data_set, int image_index) {
+  Matrix return_matrix =
+      new_matrix(image_data_set->row_count, image_data_set->col_count);
+  for (int i = 0; i < return_matrix.size.row; i++) {
+    for (int j = 0; j < return_matrix.size.col; j++) {
+      u_int8_t value = get_image_data(image_data_set, image_index, i, j);
+      set_matrix_element(&return_matrix, (float)value, i, j);
+    }
+  }
+  return return_matrix;
+};

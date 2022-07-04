@@ -168,12 +168,7 @@ void matrix_sigmoid(Matrix *matrix) {
 };
 
 void matrix_normalise(Matrix *matrix) {
-  float element_sum = 0;
-  for (int i = 0; i < matrix->size.row; i++) {
-    for (int j = 0; j < matrix->size.col; j++) {
-      element_sum += get_matrix_element(matrix, i, j);
-    }
-  }
+  float element_sum = matrix_element_sum(matrix);
   for (int i = 0; i < matrix->size.row; i++) {
     for (int j = 0; j < matrix->size.col; j++) {
       float value = get_matrix_element(matrix, i, j);
@@ -182,3 +177,15 @@ void matrix_normalise(Matrix *matrix) {
     }
   }
 };
+
+float matrix_element_sum(Matrix *matrix) {
+  float element_sum = 0;
+  for (int i = 0; i < matrix->size.row; i++) {
+    for (int j = 0; j < matrix->size.col; j++) {
+      element_sum += get_matrix_element(matrix, i, j);
+    }
+  }
+  return element_sum;
+};
+
+

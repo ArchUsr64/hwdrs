@@ -25,4 +25,5 @@ DatasetImage new_dataset_image(const char *file_path);
 u_int8_t get_label_data(DatasetLabel *label_data_set, int index);
 u_int8_t get_image_data(DatasetImage *image_data_set, int index_image,
                         int index_row, int index_col);
+Matrix get_image_data_as_matrix(DatasetImage *image_data_set, int image_index);
 void print_dataset_image(DatasetImage *image_set, int image_index);
