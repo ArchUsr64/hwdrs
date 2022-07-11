@@ -16,4 +16,4 @@ void print_hashes(int hash_count) { print_char('#', hash_count); }
 
 void print_spaces(int space_count) { print_char(' ', space_count); }
 
-void clear_screen() { printf("\e[1;1H\e[2J"); }
+void set_cursor_origin() { printf("\e[1;1H\e[2J"); }

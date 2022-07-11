@@ -10,4 +10,5 @@ const int INITIAL_WINDOW_HEIGHT = 600;
 SDL_Renderer *RENDERER_PTR;
 SDL_Window *WINDOW_PTR;
 int GRID_SIZE;
+float LEARNING_RATE;
 float brush_size = 0.05;

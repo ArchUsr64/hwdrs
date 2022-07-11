@@ -10,8 +10,14 @@
 
 bool user_quit = false;
 const int INPUT_UPDATE_FREQUENCY = 200;
-void mouse_up_function() { brush_size += 0.01; };
-void mouse_down_function() { brush_size -= 0.01; };
+void mouse_up_function() {
+  if (brush_size < 1)
+    brush_size += 0.01;
+};
+void mouse_down_function() {
+  if (brush_size > 0.05)
+    brush_size -= 0.01;
+};
 MouseState mouse;
 
 void *input_thread(void *var) {

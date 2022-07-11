@@ -10,6 +10,7 @@ typedef struct _NeuralNetwork {
   HiddenNeuronLayer *hidden_neuron_layer_array;
   OutputNeuronLayer output_neuron_layer;
   int hidden_neuron_count;
+  bool nodes_updated;
 } NeuralNetwork;
 
 typedef struct _NeuralNetworkBestChoice {
@@ -17,7 +18,11 @@ typedef struct _NeuralNetworkBestChoice {
   float p_value;
 } NeuralNetworkBestChoice;
 
-void neural_network_forward_propogation(NeuralNetwork *network);
+void neural_network_set_input_matrix(NeuralNetwork *network, Matrix *matrix);
+void neural_network_forward_propagation(NeuralNetwork *network);
+void neural_network_backward_propogation(NeuralNetwork *network,
+                                         Matrix *desired_output_matrix,
+                                         float learning_rate);
 void neural_network_fill_random(NeuralNetwork *network, float range_min,
                                 float range_max);
 void neural_network_print_output(NeuralNetwork *network);

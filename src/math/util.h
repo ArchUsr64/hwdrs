@@ -15,8 +15,14 @@ float map_to_range(float num_to_map, float range_input_min,
                    float range_input_max, float range_output_min,
                    float range_output_max);
 
-float sigmoid(float value);
+float relu(float value);
+
+float derivative_relu(float value);
 
 float random_in_range(float range_min, float range_max);
 
 u_int32_t u8tou32(u_int8_t *element);
+
+float square(float value);
+
+int square_i(int value);

@@ -47,12 +47,27 @@ void render_grid(Grid *grid) {
   }
 }
 
+void set_grid_to_matrix(Grid *grid, Matrix *cell_matrix) {
+  for (int i = 0; i < GRID_SIZE; i++) {
+    for (int j = 0; j < GRID_SIZE; j++) {
+      set_cell_value(grid, get_matrix_element(cell_matrix, i, j), i, j);
+    }
+  }
+};
+
 float get_cell_value(Grid *grid, int index_x, int index_y) {
-  return *(grid->cell + (index_x * GRID_SIZE) + index_y);
+  if (index_x >= GRID_SIZE || index_y >= GRID_SIZE) {
+    log_("Error: Trying to access out of cell value in grid");
+    return 0;
+  } else
+    return *(grid->cell + (index_x * GRID_SIZE) + index_y);
 }
 
 void set_cell_value(Grid *grid, float value, int index_x, int index_y) {
-  *(grid->cell + (index_x * GRID_SIZE) + index_y) = value;
+  if (index_x >= GRID_SIZE || index_y >= GRID_SIZE) {
+    log_("Error: Trying to access out of cell value in grid");
+  } else
+    *(grid->cell + (index_x * GRID_SIZE) + index_y) = value;
 }
 
 Matrix grid_cells_to_matrix(Grid *grid) {
@@ -64,3 +79,11 @@ Matrix grid_cells_to_matrix(Grid *grid) {
   }
   return return_matrix;
 }
+
+void clear_grid(Grid *grid) {
+  for (int i = 0; i < GRID_SIZE; i++) {
+    for (int j = 0; j < GRID_SIZE; j++) {
+			set_cell_value(grid, 0, i, j);
+    }
+  }
+};

@@ -12,11 +12,9 @@ float map_to_range(float num_to_map, float input_range_min,
   return num_to_map;
 }
 
-float sigmoid(float value) {
-  float return_value;
-  return_value = reciprocal_(1 + pow(E, -value));
-  return return_value;
-}
+float relu(float value) { return (value * (value > 0)); }
+
+float derivative_relu(float value) { return (value > 0); };
 
 u_int32_t u8tou32(u_int8_t *element) {
   u_int32_t return_int = 0;
@@ -31,3 +29,5 @@ float random_in_range(float range_min, float range_max) {
   int number = rand() % increments;
   return map_to_range(number, 0, increments, range_min, range_max);
 };
+
+float square(float value) { return value * value; };
