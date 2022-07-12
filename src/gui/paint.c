@@ -12,7 +12,7 @@ void paint_grid(Grid *grid) {
       Scalar cell_mid_point_to_mouse_distance =
           vec2_dist(&cell_mid_point, &mouse.position);
       float cell_value_to_write =
-          (brush_size - 0.8 * cell_mid_point_to_mouse_distance) / brush_size;
+          (brush_size - 0.99 * cell_mid_point_to_mouse_distance) / brush_size;
       if (mouse.left_button == KEYDOWN &&
           cell_value_to_write > get_cell_value(grid, i, j)) {
         set_cell_value(grid, cell_value_to_write, i, j);

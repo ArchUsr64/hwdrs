@@ -75,7 +75,7 @@ void matrix_add_assign(Matrix *matrix_1, Matrix *matrix_2) {
   Matrix temp_matrix = matrix_duplicate(matrix_1);
   free_matrix(matrix_1);
   *matrix_1 = matrix_add(&temp_matrix, matrix_2);
-	free_matrix(&temp_matrix);
+  free_matrix(&temp_matrix);
 }
 
 Matrix matrix_subtract(Matrix *matrix_1, Matrix *matrix_2) {
@@ -137,7 +137,7 @@ Scalar get_matrix_element(Matrix *matrix, int row_index, int col_index) {
 }
 
 void print_matrix(Matrix *matrix) {
-  int value_percision = 8;
+  int value_percision = 2;
   log_("Matrix data: ");
   print_dashes((value_percision + 3) * matrix->size.col + 2);
   printf("\n");
@@ -254,12 +254,53 @@ void matrix_derivative_relu(Matrix *matrix) {
   }
 }
 
+void matrix_normal_map(Matrix *matrix) {
+  float smallest_element = matrix_smallest_element(matrix);
+  float largest_element = matrix_largest_element(matrix);
+  for (int i = 0; i < matrix->size.row; i++) {
+    for (int j = 0; j < matrix->size.col; j++) {
+      float element = get_matrix_element(matrix, i, j);
+      if (element > 0)
+        element = map_to_range(element, 0, largest_element, 0, 1);
+      else
+        element = map_to_range(element, smallest_element, 0, -1, 0);
+      set_matrix_element(matrix, element, i, j);
+    }
+  }
+}
+
+float matrix_smallest_element(Matrix *matrix) {
+  float smallest_element = get_matrix_element(matrix, 0, 0);
+  for (int i = 0; i < matrix->size.row; i++) {
+    for (int j = 0; j < matrix->size.col; j++) {
+      float element = get_matrix_element(matrix, i, j);
+      if (element < smallest_element) {
+        smallest_element = element;
+      }
+    }
+  }
+  return smallest_element;
+}
+
+float matrix_largest_element(Matrix *matrix) {
+  float largest_element = get_matrix_element(matrix, 0, 0);
+  for (int i = 0; i < matrix->size.row; i++) {
+    for (int j = 0; j < matrix->size.col; j++) {
+      float element = get_matrix_element(matrix, i, j);
+      if (element > largest_element) {
+        largest_element = element;
+      }
+    }
+  }
+  return largest_element;
+}
+
 void matrix_normalise(Matrix *matrix) {
   float element_sum = matrix_element_sum(matrix);
   for (int i = 0; i < matrix->size.row; i++) {
     for (int j = 0; j < matrix->size.col; j++) {
       float value = get_matrix_element(matrix, i, j);
-      value /= element_sum;
+      value /= (element_sum != 0) ? element_sum : 1;
       set_matrix_element(matrix, value, i, j);
     }
   }

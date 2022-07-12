@@ -45,3 +45,6 @@ void free_matrix(Matrix *matrix);
 void matrix_normalise(Matrix *matrix);
 float matrix_element_sum(Matrix *matrix);
 void matrix_square(Matrix *matrix);
+void matrix_normal_map(Matrix *matrix);
+float matrix_smallest_element(Matrix *matrix);
+float matrix_largest_element(Matrix *matrix);

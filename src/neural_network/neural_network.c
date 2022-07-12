@@ -152,6 +152,7 @@ void neural_network_backward_propogation(NeuralNetwork *network,
     free_matrix(&dump);
     free_matrix(&previous_layer_error);
   }
+  network->nodes_updated = false;
   free_matrix(&error_matrix);
 }
 
@@ -201,4 +202,67 @@ void neural_network_set_input_matrix(NeuralNetwork *network, Matrix *matrix) {
     free_matrix(&network->input_neuron_layer.node_value_matrix);
     network->input_neuron_layer.node_value_matrix = matrix_duplicate(matrix);
   }
-};
+}
+
+void render_input_layer(InputNeuronLayer *layer, float x_offset) {
+  int node_count = layer->node_count;
+  float neuron_radius = 1.0 / node_count;
+  Matrix input_value = matrix_duplicate(&layer->node_value_matrix);
+  matrix_normal_map(&input_value);
+  for (int i = 0; i < node_count; i++) {
+    float neuron_value = get_matrix_element(&input_value, 0, i);
+    set_draw_colour(neuron_value, neuron_value, neuron_value);
+    draw_circle(((2 * i + 1) * neuron_radius) - 1, neuron_radius + x_offset - 1,
+                neuron_radius);
+  }
+  free_matrix(&input_value);
+}
+
+void render_hidden_layer(HiddenNeuronLayer *layer, float x_offset,
+                         float previous_layer_x_offset) {
+  int previous_layer_node_count = layer->node_weight_matrix.size.row;
+  float previous_layer_radius = 1.0 / previous_layer_node_count;
+  int node_count = layer->node_count;
+  float neuron_radius = 1.0 / node_count;
+  Matrix input_value = matrix_duplicate(&layer->node_value_out_matrix);
+  matrix_normal_map(&input_value);
+  Matrix weight_matrix = matrix_duplicate(&layer->node_weight_matrix);
+  matrix_normal_map(&weight_matrix);
+  for (int i = 0; i < node_count; i++) {
+    for (int j = 0; j < previous_layer_node_count; j++) {
+      float neuron_value = get_matrix_element(&weight_matrix, j, i);
+      ScreenCoordinate point_1 = {
+          .y = (previous_layer_radius + previous_layer_x_offset - 1),
+          .x = -(1 - ((2 * j + 1) * previous_layer_radius))};
+      ScreenCoordinate point_2 = {.y = (neuron_radius + x_offset - 1),
+                                  .x = -(1 - ((2 * i + 1) * neuron_radius))};
+      float color_multiplier = abs_(neuron_value);
+      if (neuron_value > 0) {
+        set_draw_colour(0.2 * color_multiplier, 1 * color_multiplier,
+                        0.2 * color_multiplier);
+      } else {
+        set_draw_colour(1 * color_multiplier, 0.2 * color_multiplier,
+                        0.2 * color_multiplier);
+      }
+      draw_line(point_1.x, point_1.y, point_2.x, point_2.y);
+    }
+    float neuron_value = get_matrix_element(&input_value, 0, i);
+    set_draw_colour(neuron_value, neuron_value, neuron_value);
+    draw_circle(((2 * i + 1) * neuron_radius) - 1, neuron_radius + x_offset - 1,
+                neuron_radius);
+  }
+  free_matrix(&input_value);
+}
+
+void neural_network_render_structure(NeuralNetwork *network) {
+  int total_layer_count = network->hidden_neuron_count + 1;
+  float layer_offset = 2.0 / total_layer_count;
+  render_input_layer(&network->input_neuron_layer, layer_offset);
+  for (int i = 0; i < network->hidden_neuron_count; i++) {
+    render_hidden_layer(&network->hidden_neuron_layer_array[i],
+                        (i + 1) * layer_offset, i * layer_offset);
+  }
+  render_hidden_layer(&network->output_neuron_layer,
+                      (total_layer_count) * layer_offset - 0.05,
+                      (total_layer_count - 1) * layer_offset);
+}

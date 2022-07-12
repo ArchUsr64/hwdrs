@@ -1,8 +1,11 @@
 #pragma once
 
+#include <SDL2/SDL.h>
+
 #include "../datset_parser/datset_parser.h"
 #include "../math/math.h"
 #include "../print.c"
+#include "../sdl/sdl_abstracted.h"
 #include "neuron_layer.h"
 
 typedef struct _NeuralNetwork {
@@ -33,3 +36,4 @@ float neural_network_evaluate_fitness(NeuralNetwork *network,
                                       DatasetImage *test_image,
                                       DatasetLabel *test_label);
 NeuralNetworkBestChoice neural_network_digit_choice(NeuralNetwork *network);
+void neural_network_render_structure(NeuralNetwork *network);
