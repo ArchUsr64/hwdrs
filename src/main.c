@@ -51,16 +51,9 @@ int main() {
 
   InputNeuronLayer network_input =
       new_input_layer(training_image.row_count * training_image.col_count);
-  /* HiddenNeuronLayer network_hidden_1 = */
-  /*     new_hidden_layer(network_input.node_count, 9); */
-  /* HiddenNeuronLayer network_hidden_2 = */
-  /*     new_hidden_layer(network_input.node_count, 10); */
   OutputNeuronLayer network_output =
       new_output_layer(network_input.node_count, 10);
-  HiddenNeuronLayer network_hidden_array[] = {
-      /* network_hidden_1, */
-      /* network_hidden_2, */
-  };
+  HiddenNeuronLayer network_hidden_array[] = {};
   NeuralNetwork network = {.input_neuron_layer = network_input,
                            .hidden_neuron_layer_array = network_hidden_array,
                            .hidden_neuron_count = sizeof(network_hidden_array) /
@@ -70,7 +63,7 @@ int main() {
   neural_network_fill_random(&network, -0.1, 0.1);
 
   LEARNING_RATE = 0.001;
-  for (int i = 0; i < training_image.image_count && true; i++) {
+  for (int i = 0; i < training_image.image_count; i++) {
     if (i % 6000 == 0) {
       float fitness =
           neural_network_evaluate_fitness(&network, &test_image, &test_label);
@@ -90,40 +83,19 @@ int main() {
     free_matrix(&desired_output_matrix);
     free_matrix(&image_data);
   }
-  neural_network_print_output(&network);
 
   float cells[GRID_SIZE * GRID_SIZE];
   Grid grid = new_grid(cells);
   KeyState previous_state = KEYUP;
-  int r = 0;
   while (!user_quit) {
     set_cursor_origin();
-    log_("Examining weights for %d", r);
     {
       set_draw_colour(0, 0, 0);
       clear_window();
       set_draw_colour(1, 1, 1);
     }
     if (mouse.middle_button == KEYDOWN && previous_state == KEYUP) {
-      r++;
-      r %= 10;
-      Matrix weight_matrix = new_matrix(28, 28);
-      for (int i = 0; i < GRID_SIZE; i++) {
-        for (int j = 0; j < GRID_SIZE; j++) {
-          float cell_value = get_matrix_element(
-              &network.output_neuron_layer.node_weight_matrix, i * 28 + j, r);
-          set_matrix_element(&weight_matrix, cell_value, i, j);
-        }
-      }
-      matrix_normal_map(&weight_matrix);
-      for (int i = 0; i < GRID_SIZE; i++) {
-        for (int j = 0; j < GRID_SIZE; j++) {
-          float cell_value = get_matrix_element(&weight_matrix, i, j);
-          cell_value = cell_value * (cell_value > 0);
-          set_cell_value(&grid, cell_value, j, i);
-        }
-      }
-      free_matrix(&weight_matrix);
+      neural_network_render_structure(&network);
     }
     Matrix nn_input_matrix = grid_cells_to_matrix(&grid);
     to_row_matrix(&nn_input_matrix);
@@ -131,14 +103,9 @@ int main() {
     neural_network_forward_propagation(&network);
     free_matrix(&nn_input_matrix);
     neural_network_print_output(&network);
-    print_matrix(&network.output_neuron_layer.node_bias_matrix);
     paint_grid(&grid);
     render_grid(&grid);
     render_brush();
-    if (mouse.left_button == KEYDOWN && mouse.right_button == KEYDOWN) {
-      neural_network_render_structure(&network);
-    }
-    previous_state = mouse.middle_button;
     { present_to_window(); }
   }
   exit(EXIT_SUCCESS);
