@@ -67,8 +67,8 @@ int main() {
     if (i % 6000 == 0) {
       float fitness =
           neural_network_evaluate_fitness(&network, &test_image, &test_label);
-      log_("Current fitness: %.4f @ %d%% training", fitness,
-           (int)((100.0 * i) / training_image.image_count));
+      log_("Current accuracy: %.4f @ %d%% training", fitness,
+           (int)((100.0 * (i + 1)) / training_image.image_count));
     }
     int index = i % training_image.image_count;
     Matrix image_data = get_image_data_as_matrix(&training_image, index);
