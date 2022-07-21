@@ -19,6 +19,7 @@ void mouse_down_function() {
     brush_size -= 0.01;
 };
 MouseState mouse;
+KeyboardState keyboard;
 
 void *input_thread(void *var) {
   mouse.mouse_up_function = &mouse_up_function;
@@ -49,8 +50,40 @@ void *input_thread(void *var) {
         if (event.wheel.y < 0) {
           (*mouse.mouse_down_function)();
         }
+        break;
+      case SDL_KEYDOWN:
+      case SDL_KEYUP:
+        switch (event.key.keysym.scancode) {
+        case SDL_SCANCODE_UP:
+        case SDL_SCANCODE_W:
+          keyboard.up_key = (event.key.type == SDL_KEYDOWN);
+          break;
+        case SDL_SCANCODE_DOWN:
+        case SDL_SCANCODE_S:
+          keyboard.down_key = (event.key.type == SDL_KEYDOWN);
+          break;
+        case SDL_SCANCODE_LEFT:
+        case SDL_SCANCODE_A:
+          keyboard.left_key = (event.key.type == SDL_KEYDOWN);
+          break;
+        case SDL_SCANCODE_RIGHT:
+        case SDL_SCANCODE_D:
+          keyboard.right_key = (event.key.type == SDL_KEYDOWN);
+          break;
+        case SDL_SCANCODE_RETURN:
+          keyboard.enter_key = (event.key.type == SDL_KEYDOWN);
+          break;
+        case SDL_SCANCODE_BACKSPACE:
+          keyboard.backspace_key = (event.key.type == SDL_KEYDOWN);
+          break;
+        case SDL_SCANCODE_SPACE:
+          keyboard.space_key = (event.key.type == SDL_KEYDOWN);
+          break;
+        default:
+          break;
+        }
+        break;
       }
-      break;
     }
     while (SDL_GetTicks() < start_time + update_interval_in_ms)
       SDL_Delay(1);
