@@ -1,3 +1,4 @@
+# Note: Due to C this repo has been archived, use the improved version at [hwdrs_improved](https://github.com/ArchUsr64/hwdrs_improved)
 # HWDRS
 (Hand Written Digit Recognition Software)
 
